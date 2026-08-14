@@ -1,5 +1,5 @@
 const TOKEN_KEY = 'neurowiki_jwt';
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://neurowiki.onrender.com';
 
 type UnauthorizedHandler = () => void;
 let onUnauthorized: UnauthorizedHandler | null = null;
