@@ -1,0 +1,127 @@
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { BrainCircuit, Lock, User as UserIcon, Mail, AlertCircle } from 'lucide-react';
+
+export const Register: React.FC = () => {
+  const navigate = useNavigate();
+  const { register } = useAuth();
+
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+
+    if (!username.trim() || !email.trim() || !password.trim()) {
+      setError('All fields are required.');
+      return;
+    }
+
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters long.');
+      return;
+    }
+
+    setIsSubmitting(true);
+    const result = await register({ username, email, password });
+    setIsSubmitting(false);
+
+    if (result.ok) {
+      navigate('/dashboard');
+    } else {
+      setError(result.message || 'Registration failed.');
+    }
+  };
+
+  return (
+    <div className="auth-page">
+      <div className="auth-card">
+        <div className="auth-header">
+          <div className="auth-logo">
+            <BrainCircuit size={40} className="logo-svg" />
+          </div>
+          <h1 className="auth-title">Create NEUROWIKI Account</h1>
+          <p className="auth-subtitle">Join the neural knowledge ecosystem</p>
+        </div>
+
+        {error && (
+          <div className="alert alert-error">
+            <AlertCircle size={18} />
+            <span>{error}</span>
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="auth-form">
+          <div className="form-group">
+            <label className="form-label">Username</label>
+            <div className="input-with-icon">
+              <UserIcon size={18} className="input-icon" />
+              <input
+                type="text"
+                className="form-input"
+                placeholder="Choose a username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+              />
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Email Address</label>
+            <div className="input-with-icon">
+              <Mail size={18} className="input-icon" />
+              <input
+                type="email"
+                className="form-input"
+                placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Password</label>
+            <div className="input-with-icon">
+              <Lock size={18} className="input-icon" />
+              <input
+                type="password"
+                className="form-input"
+                placeholder="Minimum 6 characters"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            className="btn btn-primary btn-full"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? 'Creating Account...' : 'Register'}
+          </button>
+        </form>
+
+        <div className="auth-footer">
+          <p>
+            Already have an account?{' '}
+            <Link to="/login" className="auth-link">
+              Sign In
+            </Link>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Register;
