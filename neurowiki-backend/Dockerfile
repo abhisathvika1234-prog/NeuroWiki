@@ -1,13 +1,21 @@
-FROM eclipse-temurin:21-jdk
+FROM maven:3.9.11-eclipse-temurin-21 AS build
 
 WORKDIR /app
 
-COPY . .
+COPY pom.xml .
 
-RUN chmod +x mvnw 2>/dev/null || true
+RUN mvn dependency:go-offline -B
 
-RUN if [ -f mvnw ]; then ./mvnw clean package -DskipTests; else mvn clean package -DskipTests; fi
+COPY src ./src
+
+RUN mvn clean package -DskipTests
+
+FROM eclipse-temurin:21-jre
+
+WORKDIR /app
+
+COPY --from=build /app/target/*.jar app.jar
 
 EXPOSE 8080
 
-CMD ["sh", "-c", "java -jar target/*.jar"]
+CMD ["java", "-jar", "app.jar"]
