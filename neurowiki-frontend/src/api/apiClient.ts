@@ -1,7 +1,10 @@
 const TOKEN_KEY = 'neurowiki_jwt';
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://neurowiki.onrender.com';
+
+const BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || '';
 
 type UnauthorizedHandler = () => void;
+
 let onUnauthorized: UnauthorizedHandler | null = null;
 
 export function setUnauthorizedHandler(handler: UnauthorizedHandler) {
@@ -32,11 +35,14 @@ export async function apiFetch<T = any>(
   endpoint: string,
   options: RequestInit = {}
 ): Promise<ApiResponse<T>> {
-  const url = endpoint.startsWith('http') ? endpoint : `${BASE_URL}${endpoint}`;
+  const url = endpoint.startsWith('http')
+    ? endpoint
+    : `${BASE_URL}${endpoint}`;
+
   const token = getStoredToken();
 
   const headers: Record<string, string> = {
-    ...(options.headers as Record<string, string> || {}),
+    ...((options.headers as Record<string, string>) || {}),
   };
 
   if (!(options.body instanceof FormData)) {
@@ -57,14 +63,14 @@ export async function apiFetch<T = any>(
 
     const status = response.status;
 
-    if (status === 401) {
-      if (onUnauthorized) {
-        onUnauthorized();
-      }
+    if (status === 401 && onUnauthorized) {
+      onUnauthorized();
     }
 
     let json: any = null;
+
     const contentType = response.headers.get('content-type');
+
     if (contentType && contentType.includes('application/json')) {
       json = await response.json();
     }
@@ -73,7 +79,9 @@ export async function apiFetch<T = any>(
       return {
         ok: false,
         status,
-        message: json?.message || `Request failed with status ${status}`,
+        message:
+          json?.message ||
+          `Request failed with status ${status}`,
         errors: json?.errors,
       };
     }
@@ -87,7 +95,9 @@ export async function apiFetch<T = any>(
     return {
       ok: false,
       status: 0,
-      message: error?.message || 'Network error occurred. Please check your connection.',
+      message:
+        error?.message ||
+        'Network error occurred. Please check your connection.',
     };
   }
 }

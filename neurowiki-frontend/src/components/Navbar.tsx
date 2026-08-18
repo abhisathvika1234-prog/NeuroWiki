@@ -90,10 +90,10 @@ export const Navbar: React.FC = () => {
       <div className="navbar-actions">
         <div className="status-pill">
           <Sparkles size={14} className="sparkle-icon" />
-          <span>PostgreSQL Connected</span>
+          <span>Neural Engine Active</span>
         </div>
-        <div className="user-greeting">
-          <UserIcon size={18} className="user-icon" />
+        <div className="user-greeting" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <img src="/assets/images/user-avatar.jpg" alt="User Avatar" style={{ width: '28px', height: '28px', borderRadius: '50%', objectFit: 'cover' }} />
           <span>{user?.username}</span>
         </div>
       </div>

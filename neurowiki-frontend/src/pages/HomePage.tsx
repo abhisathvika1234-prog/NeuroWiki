@@ -14,9 +14,7 @@ const HomePage: React.FC = () => {
     <div className="landing-page">
       <nav className="landing-navbar">
         <div className="landing-logo">
-          <div className="landing-logo-icon">
-            <Brain size={28} />
-          </div>
+          <img src="/assets/images/logo.jpg" alt="NeuroWiki Logo" className="landing-logo-img" style={{ width: '40px', height: '40px', borderRadius: '10px', objectFit: 'cover' }} />
 
           <div>
             <h2>NeuroWiki</h2>
@@ -112,31 +110,20 @@ const HomePage: React.FC = () => {
           </div>
         </div>
 
-        <div className="landing-visual">
-          <div className="neural-orbit orbit-one">
-            <div className="orbit-node node-one" />
-          </div>
+        <div className="landing-visual" style={{ position: 'relative', borderRadius: '24px', overflow: 'hidden', border: '1px solid rgba(255, 255, 255, 0.1)', boxShadow: '0 20px 40px rgba(0, 0, 0, 0.5)' }}>
+          <img src="/assets/images/hero.jpg" alt="Neural Ecosystem Illustration" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
 
-          <div className="neural-orbit orbit-two">
-            <div className="orbit-node node-two" />
-          </div>
-
-          <div className="neural-core">
-            <Brain size={76} strokeWidth={1.4} />
-            <div className="core-pulse" />
-          </div>
-
-          <div className="neural-card card-one">
+          <div className="neural-card card-one" style={{ backdropFilter: 'blur(8px)', background: 'rgba(15, 23, 42, 0.85)' }}>
             <Network size={18} />
             <span>Knowledge Graph</span>
           </div>
 
-          <div className="neural-card card-two">
+          <div className="neural-card card-two" style={{ backdropFilter: 'blur(8px)', background: 'rgba(15, 23, 42, 0.85)' }}>
             <Sparkles size={18} />
             <span>AI Intelligence</span>
           </div>
 
-          <div className="neural-card card-three">
+          <div className="neural-card card-three" style={{ backdropFilter: 'blur(8px)', background: 'rgba(15, 23, 42, 0.85)' }}>
             <BookOpen size={18} />
             <span>Knowledge Base</span>
           </div>

@@ -1,24 +1,45 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from 'react';
+
 import { User, LoginCredentials, RegisterData } from '../types/user';
 import { authService } from '../services/authService';
-import { getStoredToken, removeStoredToken, setUnauthorizedHandler } from '../api/apiClient';
+import {
+  getStoredToken,
+  removeStoredToken,
+  setUnauthorizedHandler,
+} from '../api/apiClient';
 
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (credentials: LoginCredentials) => Promise<{ ok: boolean; message?: string }>;
-  register: (data: RegisterData) => Promise<{ ok: boolean; message?: string }>;
+
+  login: (
+    credentials: LoginCredentials
+  ) => Promise<{ ok: boolean; message?: string }>;
+
+  register: (
+    data: RegisterData
+  ) => Promise<{ ok: boolean; message?: string }>;
+
   logout: () => void;
+
   updateUser: (updatedUser: User) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AuthProvider: React.FC<{
+  children: React.ReactNode;
+}> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const logout = useCallback(() => {
     removeStoredToken();
@@ -28,6 +49,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const restoreSession = useCallback(async () => {
     const token = getStoredToken();
+
     if (!token) {
       setUser(null);
       setIsAuthenticated(false);
@@ -36,14 +58,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     try {
-      const res = await authService.getCurrentUser();
-      if (res.ok && res.data) {
-        setUser(res.data);
+      const response = await authService.getCurrentUser();
+
+      if (response.ok && response.data) {
+        setUser(response.data);
         setIsAuthenticated(true);
       } else {
         logout();
       }
-    } catch (err) {
+    } catch (error) {
+      console.error('Session restore failed:', error);
       logout();
     } finally {
       setIsLoading(false);
@@ -54,42 +78,79 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUnauthorizedHandler(() => {
       logout();
     });
+
     restoreSession();
   }, [restoreSession, logout]);
 
-  const login = async (credentials: LoginCredentials) => {
+  const login = async (
+    credentials: LoginCredentials
+  ): Promise<{ ok: boolean; message?: string }> => {
     setIsLoading(true);
+
     try {
-      const res = await authService.login(credentials);
-      if (res.ok && res.data) {
-        setUser(res.data.user);
+      const response = await authService.login(credentials);
+
+      if (response.ok && response.data) {
+        setUser(response.data.user);
         setIsAuthenticated(true);
-        setIsLoading(false);
-        return { ok: true };
+
+        return {
+          ok: true,
+        };
       }
+
+      return {
+        ok: false,
+        message: response.message || 'Login failed',
+      };
+    } catch (error) {
+      console.error('Login error:', error);
+
+      return {
+        ok: false,
+        message:
+          error instanceof Error
+            ? error.message
+            : 'Login failed',
+      };
+    } finally {
       setIsLoading(false);
-      return { ok: false, message: res.message || 'Login failed' };
-    } catch (err: any) {
-      setIsLoading(false);
-      return { ok: false, message: err?.message || 'Login failed' };
     }
   };
 
-  const register = async (data: RegisterData) => {
+  const register = async (
+    data: RegisterData
+  ): Promise<{ ok: boolean; message?: string }> => {
     setIsLoading(true);
+
     try {
-      const res = await authService.register(data);
-      if (res.ok && res.data) {
-        setUser(res.data.user);
+      const response = await authService.register(data);
+
+      if (response.ok && response.data) {
+        setUser(response.data.user);
         setIsAuthenticated(true);
-        setIsLoading(false);
-        return { ok: true };
+
+        return {
+          ok: true,
+        };
       }
+
+      return {
+        ok: false,
+        message: response.message || 'Registration failed',
+      };
+    } catch (error) {
+      console.error('Registration error:', error);
+
+      return {
+        ok: false,
+        message:
+          error instanceof Error
+            ? error.message
+            : 'Registration failed',
+      };
+    } finally {
       setIsLoading(false);
-      return { ok: false, message: res.message || 'Registration failed' };
-    } catch (err: any) {
-      setIsLoading(false);
-      return { ok: false, message: err?.message || 'Registration failed' };
     }
   };
 
@@ -116,8 +177,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
+
+  if (context === undefined) {
+    throw new Error(
+      'useAuth must be used within an AuthProvider'
+    );
   }
+
   return context;
 };

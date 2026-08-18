@@ -135,14 +135,12 @@ export const AIPage: React.FC = () => {
             {history.map((item, index) => (
               <Card key={item.id || index} className="chat-bubble-card">
                 <div className="user-query" style={{ display: 'flex', gap: '12px', marginBottom: '14px', alignItems: 'flex-start' }}>
-                  <div className="avatar user-avatar" style={{ background: '#3b82f6', color: '#fff', padding: '6px 12px', borderRadius: '20px', fontWeight: 600, fontSize: '13px' }}>You</div>
+                  <img src="/assets/images/user-avatar.jpg" alt="User" style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover' }} />
                   <div className="query-text" style={{ fontSize: '16px', fontWeight: 600, color: '#f8fafc', paddingTop: '4px' }}>{item.question}</div>
                 </div>
 
                 <div className="ai-response" style={{ display: 'flex', gap: '12px', alignItems: 'flex-start', background: '#0f172a', padding: '16px', borderRadius: '12px', border: '1px solid #1e293b' }}>
-                  <div className="avatar ai-avatar" style={{ background: '#6366f1', color: '#fff', padding: '8px', borderRadius: '50%', display: 'flex' }}>
-                    <Bot size={18} />
-                  </div>
+                  <img src="/assets/images/ai-avatar.jpg" alt="AI Assistant" style={{ width: '36px', height: '36px', borderRadius: '50%', objectFit: 'cover', border: '1px solid #6366f1' }} />
                   <div className="response-text" style={{ flex: 1 }}>
                     <div style={{ fontSize: '15px', lineHeight: '1.6', color: '#e2e8f0', whiteSpace: 'pre-wrap' }}>
                       {item.answer}

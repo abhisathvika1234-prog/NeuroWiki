@@ -29,9 +29,7 @@ export const Sidebar: React.FC = () => {
   return (
     <aside className="sidebar">
       <div className="sidebar-brand">
-        <div className="brand-icon">
-          <BrainCircuit size={28} className="brand-logo-svg" />
-        </div>
+        <img src="/assets/images/logo.jpg" alt="Logo" style={{ width: '36px', height: '36px', borderRadius: '10px', objectFit: 'cover' }} />
         <div className="brand-text">
           <h2>NEUROWIKI</h2>
           <span>Neural Intelligence</span>
@@ -61,9 +59,7 @@ export const Sidebar: React.FC = () => {
 
       <div className="sidebar-footer">
         <div className="user-profile-badge">
-          <div className="avatar-circle">
-            {user?.username ? user.username.charAt(0).toUpperCase() : 'U'}
-          </div>
+          <img src="/assets/images/user-avatar.jpg" alt="User Avatar" style={{ width: '36px', height: '36px', borderRadius: '50%', objectFit: 'cover', border: '1px solid rgba(255, 255, 255, 0.2)' }} />
           <div className="user-info-text">
             <p className="user-name">{user?.username}</p>
             <p className="user-email">{user?.email}</p>

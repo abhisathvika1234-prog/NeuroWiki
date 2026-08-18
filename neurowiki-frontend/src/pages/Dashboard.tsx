@@ -55,7 +55,7 @@ export const Dashboard: React.FC = () => {
         <div className="banner-content">
           <h1 className="welcome-title">Welcome back, {user?.username}! 👋</h1>
           <p className="welcome-subtitle">
-            Your personal neural knowledge base is connected to PostgreSQL.
+            Your personal neural knowledge base is connected and actively indexing.
           </p>
         </div>
         <div className="banner-actions">
